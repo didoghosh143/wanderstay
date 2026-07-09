@@ -38,10 +38,10 @@ function DestCard({ dest, index }: { dest: any; index: number }) {
   return (
     <motion.div
       variants={fadeUp}
-      whileHover={{ y: -8, scale: 1.01 }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ y: -10, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       onClick={() => setLoc(`/destinations/${dest.slug}`)}
-      className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/10 flex-shrink-0 snap-center w-[85vw] md:w-[350px] h-[380px]"
+      className="group relative rounded-[2rem] overflow-hidden cursor-pointer shadow-2xl shadow-indigo-900/20 hover:shadow-violet-600/30 flex-shrink-0 snap-center w-[85vw] md:w-[350px] h-[440px] border border-white/10"
       data-testid={`card-destination-${dest.slug}`}
     >
       <LocationImage
@@ -51,33 +51,33 @@ function DestCard({ dest, index }: { dest: any; index: number }) {
         containerClassName="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
         className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
-      <div className="absolute top-4 right-4">
-        <div className="flex items-center gap-1 bg-white/15 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/20">
-          <Star size={12} className="text-amber-400 fill-amber-400" />
-          <span className="text-white text-xs font-bold">{dest.rating?.toFixed(1)}</span>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#090616] via-[#1a1245]/60 to-transparent pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-5 right-5">
+        <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 shadow-lg">
+          <Star size={14} className="text-amber-400 fill-amber-400" />
+          <span className="text-white text-sm font-bold">{dest.rating?.toFixed(1)}</span>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-5">
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <MapPin size={12} className="text-violet-300" />
-          <span className="text-violet-300 text-xs font-semibold uppercase tracking-wider">{dest.state}</span>
+      <div className="absolute bottom-0 left-0 right-0 p-7 transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
+        <div className="flex items-center gap-1.5 mb-2.5 text-violet-300 text-[11px] font-bold tracking-[0.2em] uppercase">
+          <MapPin size={14} className="text-violet-300" />
+          <span>{dest.state}</span>
         </div>
-        <h3 className="font-['DM_Serif_Display'] text-2xl text-white mb-2">{dest.name}</h3>
+        <h3 className="font-['DM_Serif_Display'] text-3xl md:text-4xl text-white mb-4 leading-tight drop-shadow-md">{dest.name}</h3>
         <div className="flex items-center justify-between">
           <div className="flex gap-1.5 flex-wrap">
             {dest.tags?.slice(0, 2).map((t: string) => (
-              <span key={t} className="bg-white/15 backdrop-blur-sm text-white/80 text-xs px-2 py-0.5 rounded-full border border-white/10">
-                {t}
-              </span>
-            ))}
-          </div>
-          <motion.div
-            initial={{ x: 0 }}
-            whileHover={{ x: 4 }}
-            className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg"
-          >
-            <ArrowRight size={14} className="text-white" />
+            <span key={t} className="bg-white/10 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/20">
+              {t}
+            </span>
+          ))}
+        </div>
+        <motion.div
+          initial={{ x: 0 }}
+          whileHover={{ x: 4, scale: 1.1 }}
+          className="w-12 h-12 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:rotate-0 -rotate-45 transition-transform duration-300"
+        >
+          <ArrowRight size={20} className="text-white" />
           </motion.div>
         </div>
       </div>
@@ -91,12 +91,12 @@ function HotelCard({ hotel }: { hotel: any }) {
   const [liked, setLiked] = useState(false);
   return (
     <motion.div
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-black/5 border border-gray-100/80 flex-shrink-0 snap-center w-[85vw] md:w-[350px]"
+      whileHover={{ y: -8, scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="bg-white rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(79,70,229,0.15)] border border-gray-100 hover:border-violet-200 transition-colors duration-300 flex-shrink-0 snap-center w-[85vw] md:w-[350px]"
       data-testid={`card-hotel-${hotel.id}`}
     >
-      <div className="relative h-52 overflow-hidden group/hotel">
+      <div className="relative h-64 overflow-hidden group/hotel">
         <LocationImage
           title={hotel.name}
           fallbackUrl={hotel.images?.[0] || "/images/hotel-kolkata-1.png"}
@@ -133,14 +133,17 @@ function HotelCard({ hotel }: { hotel: any }) {
         </div>
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div>
-            <span className="text-xs text-gray-400 font-medium">from</span>
-            <p className="text-xl font-bold text-gray-900">₹{hotel.pricePerNight?.toLocaleString("en-IN")}<span className="text-sm font-normal text-gray-400">/night</span></p>
+            <span className="text-[11px] text-gray-400 font-bold uppercase tracking-[0.15em] mb-1 block">from</span>
+            <p className="text-2xl font-extrabold text-gray-900 flex items-baseline gap-1">₹{hotel.pricePerNight?.toLocaleString("en-IN")}<span className="text-sm font-medium text-gray-500">/night</span></p>
           </div>
           <motion.button
             whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => setLoc(`/hotels/${hotel.id}`)}
-            className="btn-primary text-sm px-5 py-2.5"
+            whileTap={{ scale: 0.95 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setLoc(`/hotels/${hotel.id}`);
+            }}
+            className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all flex items-center gap-2"
             data-testid={`button-book-${hotel.id}`}
           >
             <span>Book Now</span>
@@ -424,7 +427,7 @@ export default function Home() {
             ))
           ) : (
             Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-3xl shimmer-skeleton w-[85vw] md:w-[350px] flex-shrink-0 h-[380px]" />
+              <div key={i} className="rounded-[2rem] shimmer-skeleton w-[85vw] md:w-[350px] flex-shrink-0 h-[440px]" />
             ))
           )}
         </motion.div>
