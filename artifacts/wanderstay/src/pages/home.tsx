@@ -4,6 +4,7 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from "fra
 import { Search, MapPin, Calendar, Users, Star, ArrowRight, ChevronDown, Sparkles, TrendingUp, Shield, Zap, Heart } from "lucide-react";
 import { useListDestinations, useListHotels, getListDestinationsQueryKey, getListHotelsQueryKey } from "@/lib/mockApi";
 import { useAuth } from "@/contexts/AuthContext";
+import { LocationImage } from "@/components/LocationImage";
 
 // ── Animated counter ──────────────────────────────────────────────────────
 function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
@@ -40,15 +41,17 @@ function DestCard({ dest, index }: { dest: any; index: number }) {
       whileHover={{ y: -8, scale: 1.01 }}
       transition={{ duration: 0.3 }}
       onClick={() => setLoc(`/destinations/${dest.slug}`)}
-      className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/10 flex-shrink-0 snap-center w-[85vw] md:w-auto"
-      style={{ height: index % 3 === 0 ? 420 : 340 }}
+      className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/10 w-full h-[380px]"
       data-testid={`card-destination-${dest.slug}`}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-        style={{ backgroundImage: `url(${dest.images?.[0] || "/images/dest-kolkata.png"})` }}
+      <LocationImage
+        title={dest.name}
+        fallbackUrl={dest.images?.[0] || "/images/dest-kolkata.png"}
+        alt={dest.name}
+        containerClassName="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
+        className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
       <div className="absolute top-4 right-4">
         <div className="flex items-center gap-1 bg-white/15 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/20">
           <Star size={12} className="text-amber-400 fill-amber-400" />
@@ -90,14 +93,16 @@ function HotelCard({ hotel }: { hotel: any }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-black/5 border border-gray-100/80 w-[85vw] md:w-auto snap-center flex-shrink-0"
+      className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-black/5 border border-gray-100/80 w-full"
       data-testid={`card-hotel-${hotel.id}`}
     >
-      <div className="relative h-52 overflow-hidden">
-        <img
-          src={hotel.images?.[0] || "/images/hotel-kolkata-1.png"}
+      <div className="relative h-52 overflow-hidden group/hotel">
+        <LocationImage
+          title={hotel.name}
+          fallbackUrl={hotel.images?.[0] || "/images/hotel-kolkata-1.png"}
           alt={hotel.name}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+          containerClassName="absolute inset-0"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover/hotel:scale-105"
         />
         <button
           onClick={(e) => { e.stopPropagation(); setLiked(!liked); }}
@@ -411,14 +416,17 @@ export default function Home() {
           variants={stagger}
           initial="hidden"
           animate={destInView ? "show" : "hidden"}
-          className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:overflow-visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {destData?.destinations?.slice(0, 6).map((dest: any, i: number) => (
-            <DestCard key={dest.id} dest={dest} index={i} />
-          ))}
-          {!destData?.destinations && Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-3xl shimmer-skeleton" style={{ height: i % 3 === 0 ? 420 : 340 }} />
-          ))}
+          {destData?.destinations ? (
+            destData.destinations.slice(0, 6).map((dest: any, i: number) => (
+              <DestCard key={dest.id} dest={dest} index={i} />
+            ))
+          ) : (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="rounded-3xl shimmer-skeleton w-full h-[380px]" />
+            ))
+          )}
         </motion.div>
       </section>
 
@@ -490,16 +498,19 @@ export default function Home() {
             variants={stagger}
             initial="hidden"
             animate={hotelsInView ? "show" : "hidden"}
-            className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:overflow-visible"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {hotelsData?.hotels?.slice(0, 6).map((hotel: any) => (
-              <motion.div key={hotel.id} variants={fadeUp}>
-                <HotelCard hotel={hotel} />
-              </motion.div>
-            ))}
-            {!hotelsData?.hotels && Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-2xl shimmer-skeleton h-80" />
-            ))}
+            {hotelsData?.hotels ? (
+              hotelsData.hotels.slice(0, 6).map((hotel: any) => (
+                <motion.div key={hotel.id} variants={fadeUp}>
+                  <HotelCard hotel={hotel} />
+                </motion.div>
+              ))
+            ) : (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-2xl shimmer-skeleton h-[380px] w-full" />
+              ))
+            )}
           </motion.div>
         </div>
       </section>

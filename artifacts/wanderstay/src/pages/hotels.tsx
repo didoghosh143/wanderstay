@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, SlidersHorizontal, Star, MapPin, Wifi, Coffee, Car, Waves, Heart, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useListHotels, getListHotelsQueryKey } from "@/lib/mockApi";
+import { LocationImage } from "@/components/LocationImage";
 
 const STATES = ["All India", "West Bengal", "Rajasthan", "Goa", "Kerala", "Himachal Pradesh", "Tamil Nadu", "Uttarakhand", "Maharashtra", "Delhi", "Uttar Pradesh"];
 const AMENITY_ICONS: Record<string, any> = { WiFi: Wifi, Coffee: Coffee, Parking: Car, Pool: Waves, Car: Car };
@@ -21,11 +22,13 @@ function HotelCard({ hotel }: { hotel: any }) {
       className="bg-white rounded-2xl overflow-hidden shadow-md shadow-black/5 border border-gray-100 group"
       data-testid={`card-hotel-${hotel.id}`}
     >
-      <div className="relative h-56 overflow-hidden">
-        <img
-          src={hotel.images?.[0] || "/images/hotel-kolkata-1.png"}
+      <div className="relative h-56 overflow-hidden group/hotel">
+        <LocationImage
+          title={hotel.name}
+          fallbackUrl={hotel.images?.[0] || "/images/hotel-kolkata-1.png"}
           alt={hotel.name}
-          className="w-full h-full object-cover transition-transform duration-600 group-hover:scale-110"
+          containerClassName="absolute inset-0"
+          className="w-full h-full object-cover transition-transform duration-600 group-hover/hotel:scale-110"
         />
         <button onClick={(e) => { e.stopPropagation(); setLiked(!liked); }} className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-md" aria-label="Save">
           <Heart size={16} className={liked ? "text-rose-500 fill-rose-500" : "text-gray-400"} />

@@ -10,15 +10,11 @@ const fadeUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 
-// ── Default Suggestions ────────────────────────────────────────────────────
-const SUGGESTIONS = [
-  { title: "Taj Mahal", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/800px-Taj_Mahal_%28Edited%29.jpeg" },
-  { title: "Victoria Memorial", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Victoria_Memorial_Kolkata_India.jpg/800px-Victoria_Memorial_Kolkata_India.jpg" },
-  { title: "Eiffel Tower", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg/800px-Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg" },
-  { title: "Colosseum", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/800px-Colosseo_2020.jpg" },
-  { title: "Machu Picchu", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Machu_Picchu%2C_Peru.jpg/800px-Machu_Picchu%2C_Peru.jpg" },
-  { title: "Statue of Liberty", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Statue_of_Liberty_7.jpg/800px-Statue_of_Liberty_7.jpg" }
-];
+const CATEGORIES = {
+  "🌍 World Wonders": ["Eiffel Tower", "Colosseum", "Machu Picchu", "Statue of Liberty", "Great Wall of China", "Pyramids of Giza"],
+  "🇮🇳 Incredible India": ["Taj Mahal", "Hawa Mahal", "Gateway of India", "Qutb Minar", "Red Fort", "Mysore Palace"],
+  "🐅 West Bengal": ["Victoria Memorial", "Howrah Bridge", "Darjeeling Himalayan Railway", "Hazarduari Palace", "Dakshineswar Kali Temple", "Belur Math"],
+};
 
 // ── Monument Detail Modal ──────────────────────────────────────────────────
 function MonumentModal({ title, onClose }: { title: string; onClose: () => void }) {
@@ -160,6 +156,7 @@ export default function Explore() {
   const [query, setQuery] = useState("");
   const [activeSearch, setActiveSearch] = useState("");
   const [selectedMonument, setSelectedMonument] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<keyof typeof CATEGORIES>("🌍 World Wonders");
 
   const { data: results, isLoading, isError } = useSearchMonuments(activeSearch);
 
@@ -297,20 +294,43 @@ export default function Explore() {
         {/* Default Suggestions (Shown when not searching) */}
         {!activeSearch && (
           <motion.div variants={stagger} initial="hidden" animate="show">
-            <div className="text-center mb-12">
-              <h2 className="font-['DM_Serif_Display'] text-3xl md:text-4xl text-gray-900 mb-3">World's Greatest Wonders</h2>
-              <p className="text-gray-500">Start exploring by clicking one of these iconic landmarks.</p>
+            <div className="text-center mb-10">
+              <h2 className="font-['DM_Serif_Display'] text-3xl md:text-4xl text-gray-900 mb-6">Wonders to Discover</h2>
+              <div className="flex flex-wrap justify-center gap-3 mb-8">
+                {Object.keys(CATEGORIES).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab as keyof typeof CATEGORIES)}
+                    className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                      activeTab === tab 
+                        ? "bg-violet-600 text-white shadow-lg shadow-violet-200" 
+                        : "bg-white text-gray-600 border border-gray-200 hover:border-violet-300 hover:text-violet-600"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {SUGGESTIONS.map((item, i) => (
-                <SuggestedMonumentCard 
-                  key={i} 
-                  title={item.title} 
-                  onClick={() => setSelectedMonument(item.title)} 
-                />
-              ))}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeTab}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {CATEGORIES[activeTab].map((title, i) => (
+                  <SuggestedMonumentCard 
+                    key={title} 
+                    title={title} 
+                    onClick={() => setSelectedMonument(title)} 
+                  />
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         )}
       </section>

@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Star, MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useListDestinations, getListDestinationsQueryKey } from "@/lib/mockApi";
+import { LocationImage } from "@/components/LocationImage";
 
 const STATES = ["All India", "West Bengal", "Rajasthan", "Goa", "Kerala", "Himachal Pradesh", "Tamil Nadu", "Uttarakhand", "Maharashtra", "Delhi", "Uttar Pradesh"];
 
@@ -21,11 +22,14 @@ function DestCard({ dest }: { dest: any }) {
       className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/8 h-80"
       data-testid={`card-destination-${dest.slug}`}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-        style={{ backgroundImage: `url(${dest.images?.[0] || "/images/dest-kolkata.png"})` }}
+      <LocationImage
+        title={dest.name}
+        fallbackUrl={dest.images?.[0] || "/images/dest-kolkata.png"}
+        alt={dest.name}
+        containerClassName="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
+        className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none" />
       <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/15 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/20">
         <Star size={12} className="text-amber-400 fill-amber-400" />
         <span className="text-white text-xs font-bold">{dest.rating?.toFixed(1)}</span>

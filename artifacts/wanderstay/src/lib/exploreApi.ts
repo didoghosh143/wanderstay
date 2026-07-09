@@ -74,3 +74,34 @@ export function useMonumentDetails(title: string, enabled = true) {
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
 }
+
+// ── Image Only Fetch ───────────────────────────────────────────────────────
+export function useWikipediaImage(title: string, enabled = true) {
+  return useQuery({
+    queryKey: ["wiki-image", title],
+    queryFn: async () => {
+      if (!title) return null;
+
+      const res = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=original|thumbnail&pithumbsize=800&titles=${encodeURIComponent(
+          title
+        )}&format=json&origin=*`
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch image");
+
+      const data = await res.json();
+      const pages = data?.query?.pages;
+      if (!pages) return null;
+
+      const pageId = Object.keys(pages)[0];
+      if (pageId === "-1") return null;
+
+      const page = pages[pageId];
+      // Prefer thumbnail (scaled to 800px) over original for performance
+      return page.thumbnail?.source || page.original?.source || null;
+    },
+    enabled: enabled && !!title,
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours (images rarely change)
+  });
+}
