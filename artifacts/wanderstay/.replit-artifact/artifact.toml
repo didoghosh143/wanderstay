@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Wanderstay"
+version = "1.0.0"
+id = "artifacts/wanderstay"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23743
+
+[services.development]
+run = "pnpm --filter @workspace/wanderstay run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/wanderstay", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/wanderstay/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23743"
+BASE_PATH = "/"
