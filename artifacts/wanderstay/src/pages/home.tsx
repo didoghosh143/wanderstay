@@ -41,7 +41,7 @@ function DestCard({ dest, index }: { dest: any; index: number }) {
       whileHover={{ y: -8, scale: 1.01 }}
       transition={{ duration: 0.3 }}
       onClick={() => setLoc(`/destinations/${dest.slug}`)}
-      className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/10 w-full h-[380px]"
+      className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-black/10 flex-shrink-0 snap-center w-[85vw] md:w-[350px] h-[380px]"
       data-testid={`card-destination-${dest.slug}`}
     >
       <LocationImage
@@ -93,7 +93,7 @@ function HotelCard({ hotel }: { hotel: any }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-black/5 border border-gray-100/80 w-full"
+      className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-black/5 border border-gray-100/80 flex-shrink-0 snap-center w-[85vw] md:w-[350px]"
       data-testid={`card-hotel-${hotel.id}`}
     >
       <div className="relative h-52 overflow-hidden group/hotel">
@@ -416,7 +416,7 @@ export default function Home() {
           variants={stagger}
           initial="hidden"
           animate={destInView ? "show" : "hidden"}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:overflow-visible"
         >
           {destData?.destinations ? (
             destData.destinations.slice(0, 6).map((dest: any, i: number) => (
@@ -424,7 +424,7 @@ export default function Home() {
             ))
           ) : (
             Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-3xl shimmer-skeleton w-full h-[380px]" />
+              <div key={i} className="rounded-3xl shimmer-skeleton w-[85vw] md:w-[350px] flex-shrink-0 h-[380px]" />
             ))
           )}
         </motion.div>
@@ -498,17 +498,17 @@ export default function Home() {
             variants={stagger}
             initial="hidden"
             animate={hotelsInView ? "show" : "hidden"}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:overflow-visible"
           >
             {hotelsData?.hotels ? (
               hotelsData.hotels.slice(0, 6).map((hotel: any) => (
-                <motion.div key={hotel.id} variants={fadeUp}>
+                <motion.div key={hotel.id} variants={fadeUp} className="flex-shrink-0">
                   <HotelCard hotel={hotel} />
                 </motion.div>
               ))
             ) : (
               Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-2xl shimmer-skeleton h-[380px] w-full" />
+                <div key={i} className="rounded-2xl shimmer-skeleton h-[380px] w-[85vw] md:w-[350px] flex-shrink-0" />
               ))
             )}
           </motion.div>
