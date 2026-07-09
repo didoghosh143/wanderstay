@@ -38,47 +38,43 @@ function DestCard({ dest, index }: { dest: any; index: number }) {
   return (
     <motion.div
       variants={fadeUp}
-      whileHover={{ y: -10, scale: 1.02 }}
+      whileHover={{ y: -8, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       onClick={() => setLoc(`/destinations/${dest.slug}`)}
-      className="group relative rounded-[2rem] overflow-hidden cursor-pointer shadow-2xl shadow-indigo-900/20 hover:shadow-violet-600/30 flex-shrink-0 snap-center w-[85vw] md:w-[350px] h-[440px] border border-white/10"
+      className="bg-white group relative rounded-[2rem] overflow-hidden cursor-pointer shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-violet-900/10 border border-gray-100 flex-shrink-0 snap-center w-[85vw] md:w-[350px] transition-all"
       data-testid={`card-destination-${dest.slug}`}
     >
-      <LocationImage
-        title={dest.name}
-        fallbackUrl={dest.images?.[0] || "/images/dest-kolkata.png"}
-        alt={dest.name}
-        containerClassName="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#090616] via-[#1a1245]/60 to-transparent pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
-      <div className="absolute top-5 right-5">
-        <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 shadow-lg">
+      <div className="relative h-56 overflow-hidden">
+        <LocationImage
+          title={dest.name}
+          fallbackUrl={dest.images?.[0] || "/images/dest-kolkata.png"}
+          alt={dest.name}
+          containerClassName="absolute inset-0"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-sm flex items-center gap-1.5 border border-white/50">
           <Star size={14} className="text-amber-400 fill-amber-400" />
-          <span className="text-white text-sm font-bold">{dest.rating?.toFixed(1)}</span>
+          <span className="text-gray-900 font-bold text-sm">{dest.rating?.toFixed(1) || "4.7"}</span>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-7 transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
-        <div className="flex items-center gap-1.5 mb-2.5 text-violet-300 text-[11px] font-bold tracking-[0.2em] uppercase">
-          <MapPin size={14} className="text-violet-300" />
+
+      <div className="p-6">
+        <div className="flex items-center gap-1.5 mb-2 text-violet-600 text-[11px] font-bold tracking-[0.15em] uppercase">
+          <MapPin size={14} className="text-violet-500" />
           <span>{dest.state}</span>
         </div>
-        <h3 className="font-['DM_Serif_Display'] text-3xl md:text-4xl text-white mb-4 leading-tight drop-shadow-md">{dest.name}</h3>
-        <div className="flex items-center justify-between">
-          <div className="flex gap-1.5 flex-wrap">
+        <h3 className="font-['DM_Serif_Display'] text-3xl text-gray-900 mb-4">{dest.name}</h3>
+        <div className="flex items-center justify-between mt-auto">
+          <div className="flex flex-wrap gap-2">
             {dest.tags?.slice(0, 2).map((t: string) => (
-            <span key={t} className="bg-white/10 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/20">
-              {t}
-            </span>
-          ))}
-        </div>
-        <motion.div
-          initial={{ x: 0 }}
-          whileHover={{ x: 4, scale: 1.1 }}
-          className="w-12 h-12 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:rotate-0 -rotate-45 transition-transform duration-300"
-        >
-          <ArrowRight size={20} className="text-white" />
-          </motion.div>
+              <span key={t} className="bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full border border-gray-200/60">
+                {t}
+              </span>
+            ))}
+          </div>
+          <div className="w-10 h-10 rounded-full bg-violet-50 flex items-center justify-center text-violet-600 group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+            <ArrowRight size={18} className="-rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+          </div>
         </div>
       </div>
     </motion.div>
